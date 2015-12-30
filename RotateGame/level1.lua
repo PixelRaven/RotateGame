@@ -4,7 +4,7 @@
 --
 -----------------------------------------------------------------------------------------
 
-local composer = require( "composer" )
+local composer = require "composer"
 local scene = composer.newScene()
 
 -- include Corona's "physics" library
