@@ -22,12 +22,14 @@ local halfW, halfH = screenW/2, screenH/2
 
 function scene:create(event)
     --Create our "levelObjs" display group
-	local group = self.view
+	local sceneGroup = self.view
 	levelObjs = display.newGroup()
-	group:insert(levelObjs)
+	sceneGroup:insert(levelObjs)
 	levelObjs.anchorChildren = true
 	levelObjs.anchorX, levelObjs.anchorY = 0.5, 0.5
 	levelObjs.x, levelObjs.y = halfW, halfH
+	
+	system.setAccelerometerInterval(10) -- From 10 - 100 Hz. Lower saves battery
 			
 	--Load Sound Effects
 	local collide = audio.loadSound("collide.mp3")
@@ -109,8 +111,8 @@ function scene:create(event)
 		return true
 	end
 
-	--local slider = display.newRoundedRect(group, halfW, 480, 300, 48, 16)
-	local slider = display.newCircle(group, halfW, screenH-64, 48)
+	--local slider = display.newRoundedRect(sceneGroup, halfW, 480, 300, 48, 16)
+	local slider = display.newCircle(sceneGroup, halfW, screenH-64, 48)
 	slider:setFillColor(1, 0.5, 0)
 	slider:addEventListener("touch", myTouchListener)
 
@@ -124,6 +126,10 @@ function scene:create(event)
 	Runtime:addEventListener("enterFrame", enterFrameListener)
 end
 
+function onAccelerate(event)
+	print(event.name, event.xGravity, event.yGravity, event.zGravity)
+	physics.setGravity(event.zGravity, event.xGravity)
+end
 
 function scene:show(event)
 	local sceneGroup = self.view
@@ -137,6 +143,7 @@ function scene:show(event)
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
 		physics.start()
+		Runtime:addEventListener("accelerometer", onAccelerate)
 	end
 end
 
@@ -150,6 +157,7 @@ function scene:hide(event)
 		--
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
+		Runtime:removeEventListener("accelerometer", onAccelerate)
 		physics.stop()
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
