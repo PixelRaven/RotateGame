@@ -4,16 +4,14 @@ application =
 	content =
 	{
 		width = 320,
-		height = 568, 
-		scale = "letterBox",
+		height = 480, 
+		scale = "zoomEven",
 		fps = 30,
 		
-		--[[
-		imageSuffix =
-		{
-			    ["@2x"] = 2,
-		},
-		--]]
+		[[imageSuffix = {
+			["@2x"] = 2,
+			["@3x"] = 3
+		}]]
 	},
 
 	--[[
