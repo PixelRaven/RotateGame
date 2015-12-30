@@ -10,8 +10,8 @@ local scene = composer.newScene()
 -- include Corona's "physics" library
 local physics = require "physics"
 physics.start(); physics.pause()
-physics.setPositionIterations(1280)
-physics.setVelocityIterations(12)
+physics.setPositionIterations(1280) -- Default is 3?
+physics.setVelocityIterations(12) -- Default is 8?
 --physics.setDrawMode("hybrid")
 
 --------------------------------------------
@@ -20,16 +20,14 @@ physics.setVelocityIterations(12)
 local screenW, screenH = display.contentWidth, display.contentHeight
 local halfW, halfH = screenW/2, screenH/2
 
-function scene:create( event )
+function scene:create(event)
     --Create our "levelObjs" display group
 	local group = self.view
 	levelObjs = display.newGroup()
 	group:insert(levelObjs)
 	levelObjs.anchorChildren = true
-	levelObjs.anchorX = 0.5
-	levelObjs.anchorY = 0.5
-	levelObjs.x = halfW
-	levelObjs.y = halfH
+	levelObjs.anchorX, levelObjs.anchorY = 0.5, 0.5
+	levelObjs.x, levelObjs.y = halfW, halfH
 			
 	local BOUNCE = 0.0
 	local FRICTION = 1.0
@@ -112,7 +110,7 @@ function scene:create( event )
 end
 
 
-function scene:show( event )
+function scene:show(event)
 	local sceneGroup = self.view
 	local phase = event.phase
 	
@@ -127,7 +125,7 @@ function scene:show( event )
 	end
 end
 
-function scene:hide( event )
+function scene:hide(event)
 	local sceneGroup = self.view
 	
 	local phase = event.phase
@@ -144,7 +142,7 @@ function scene:hide( event )
 	
 end
 
-function scene:destroy( event )
+function scene:destroy(event)
 
 	-- Called prior to the removal of scene's "view" (sceneGroup)
 	-- 
@@ -172,10 +170,10 @@ end
 ---------------------------------------------------------------------------------
 
 -- Listener setup
-scene:addEventListener( "create", scene )
-scene:addEventListener( "show", scene )
-scene:addEventListener( "hide", scene )
-scene:addEventListener( "destroy", scene )
+scene:addEventListener("create", scene)
+scene:addEventListener("show", scene)
+scene:addEventListener("hide", scene)
+scene:addEventListener("destroy", scene)
 
 -----------------------------------------------------------------------------------------
 
