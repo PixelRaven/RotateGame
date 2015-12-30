@@ -29,19 +29,17 @@ function scene:create(event)
 	levelObjs.anchorX, levelObjs.anchorY = 0.5, 0.5
 	levelObjs.x, levelObjs.y = halfW, halfH
 			
+	--Load Sound Effects
+	local collide = audio.loadSound("collide.mp3")
+
+	-- Create Walls
+	local walls = display.newImage(levelObjs, "image.png", 240, 240)
+	walls.x, walls.y = halfW, 220
+	walls.myName = "walls"
+	
 	local BOUNCE = 0.0
 	local FRICTION = 1.0
 	local speed = 0 -- Speed of wall group rotation
-
-	local walls = display.newImage(levelObjs, "image.png", 240, 240)
-	walls.x, walls.y = halfW, 220
-	--Add our spikes
-	local obstacles = {}
-	local spike = display.newImage(levelObjs, "spike.png", 24, 32)
-	physics.addBody(spike, "static", {shape={-12, 16, 0, -16, 12, 16}, density=3.0, friction=0.8, bounce=0.3})
-	spike.x, spike.y = 65, 314
-	spike.myName = "spike"
-	obstacles[0] = spike
 	
 	physics.addBody(walls, "static",
 		{density=1.0, bounce=BOUNCE, friction=FRICTION, shape={-120,-120, 120,-120, 120,-110, -120,-110}},
@@ -55,7 +53,16 @@ function scene:create(event)
 		{density=1.0, bounce=BOUNCE, friction=FRICTION, shape={-40,-30, -30,-30, -30,50, -40,50}},
 		{density=1.0, bounce=BOUNCE, friction=FRICTION, shape={-30,40, 80,40, 80,50, -30,50}}
 	)
-
+	
+	--Add our spikes
+	local obstacles = {}
+	local spike = display.newImage(levelObjs, "spike.png", 24, 32)
+	physics.addBody(spike, "static", {shape={-12, 16, 0, -16, 12, 16}, density=3.0, friction=0.8, bounce=0.3})
+	spike.x, spike.y = 65, 314
+	spike.myName = "spike"
+	obstacles[0] = spike
+	
+	-- Create Balls
 	local ball = createBall(12, 108, 120)
 	local ball2
 	local split = 0
@@ -70,6 +77,14 @@ function scene:create(event)
 				ball2 = createBall(6, ballX+3, ballY)
 			end
 			timer.performWithDelay(1, splitBall)
+		elseif event.other.myName ~= nil and event.other.myName == "walls" then
+			local vx, vy = self:getLinearVelocity()
+			local v = math.min((math.abs(vx) + math.abs(vy))/300, 1)
+			print("vx: " .. vx .. " vy: " .. vy .. " v: " .. v)
+			if v > 0.4 then 
+				audio.setVolume(v)
+				local collideChannel = audio.play(collide)
+			end
 		end
 	end
 
